@@ -1,0 +1,33 @@
+This is a C# wrapper for TheoraPlay, a library for quickly and easily decoding
+Ogg Theora videos.
+
+License
+-------
+TheoraPlay and the C# wrapper are released under the zlib license. See the
+licenses/ folder for details.
+
+About TheoraPlay
+----------------
+For more information about TheoraPlay, visit the website:
+
+http://icculus.org/projects/theoraplay/
+
+About the C# Wrapper
+--------------------
+The C# wrapper was written as a wrapper to be used in MonoGame's VideoPlayer. We
+wrap this around TheoraPlay compiled as a shared library. The build environment
+for the native library has been prepared in TheoraPlay/ as a CMake project.
+
+Building TheoraPlay
+-------------------
+To build, you will need CMake as well as libogg, libvorbis and libtheora.
+
+ cd TheoraPlay
+ mkdir build
+ cd build
+ cmake ..
+ make
+
+Building the C# Wrapper
+-----------------------
+Just type `make` in the root directory!
