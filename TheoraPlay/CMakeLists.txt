@@ -11,6 +11,9 @@ ENDIF()
 # Compiler flags
 SET(CMAKE_C_FLAGS "-O2 -std=c99 -Wall -Wno-implicit-function-declaration")
 
+# Linker flags
+SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+
 # Include our own API...
 include_directories(include)
 
@@ -19,3 +22,5 @@ ADD_LIBRARY(theoraplay SHARED src/theoraplay.c)
 TARGET_LINK_LIBRARIES(theoraplay ogg)
 TARGET_LINK_LIBRARIES(theoraplay vorbis)
 TARGET_LINK_LIBRARIES(theoraplay theora)
+TARGET_LINK_LIBRARIES(theoraplay theoradec)
+TARGET_LINK_LIBRARIES(theoraplay pthread)
