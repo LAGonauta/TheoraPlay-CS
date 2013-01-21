@@ -31,14 +31,7 @@ using System.Runtime.InteropServices;
 
 public class TheoraPlay
 {
-// TODO: Note that TheoraPlay still needs a Windows port! -flibit
-#if LINUX
-	const string theoraplay_libname = "libtheoraplay.so";
-#elif MONOMAC
-	const string theoraplay_libname = "libtheoraplay.dylib";
-#else
-	#error Check the platform support for TheoraPlay.cs!
-#endif
+	const string theoraplay_libname = "libtheoraplay.dll";
 
 	public enum THEORAPLAY_VideoFormat
 	{
