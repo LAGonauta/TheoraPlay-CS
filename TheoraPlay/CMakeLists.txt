@@ -12,7 +12,9 @@ ENDIF()
 SET(CMAKE_C_FLAGS "-O2 -std=c99 -Wall -Wno-implicit-function-declaration")
 
 # Linker flags
-SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # Include our own API...
 include_directories(include)
