@@ -3,9 +3,9 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(TheoraPlay)
 
-# Oh, to have fat binaries on Linux...
+# Mono for OSX is only 32-bit
 IF (CMAKE_SYSTEM_NAME STREQUAL Darwin)
-	SET(CMAKE_OSX_ARCHITECTURES "i386" "x86_64")
+	SET(CMAKE_OSX_ARCHITECTURES "i386")
 ENDIF()
 
 # Compiler flags
