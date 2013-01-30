@@ -41,16 +41,23 @@ public class TheoraPlay
 		THEORAPLAY_VIDFMT_RGBA
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Explicit)]
 	public struct THEORAPLAY_VideoFrame
 	{
-		public uint playms;
-		public double fps;
-		public uint width;
-		public uint height;
-		public THEORAPLAY_VideoFormat format;
-		public IntPtr pixels;	// unsigned char*
-		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
+		[FieldOffset(0)]
+			public uint playms;
+		[FieldOffset(4)]
+			public double fps;
+		[FieldOffset(12)]
+			public uint width;
+		[FieldOffset(16)]
+			public uint height;
+		[FieldOffset(20)]
+			public THEORAPLAY_VideoFormat format;
+		[FieldOffset(24)]
+			public IntPtr pixels;	// unsigned char*
+		[FieldOffset(32)]
+			public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
