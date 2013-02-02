@@ -41,8 +41,19 @@ public class TheoraPlay
 		THEORAPLAY_VIDFMT_RGBA
 	}
 
-	[StructLayout(LayoutKind.Explicit)]
 	public struct THEORAPLAY_VideoFrame
+	{
+		public uint playms;
+		public double fps;
+		public uint width;
+		public uint height;
+		public THEORAPLAY_VideoFormat format;
+		public IntPtr pixels;	// unsigned char*
+		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
+	}
+
+	[StructLayout(LayoutKind.Explicit)]
+	private struct THEORAPLAY_VideoFrame_INTERNAL32
 	{
 		[FieldOffset(0)]
 			public uint playms;
@@ -58,6 +69,18 @@ public class TheoraPlay
 			public IntPtr pixels;	// unsigned char*
 		[FieldOffset(32)]
 			public IntPtr next;	// struct THEORAPLAY_VideoFrame*
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	private struct THEORAPLAY_VideoFrame_INTERNAL64
+	{
+		public uint playms;
+		public double fps;
+		public uint width;
+		public uint height;
+		public THEORAPLAY_VideoFormat format;
+		public IntPtr pixels;	// unsigned char*
+		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -130,4 +153,66 @@ public class TheoraPlay
 
 	[DllImport(theoraplay_libname)]
 	public static extern void THEORAPLAY_freeVideo(IntPtr item);
+
+	/* External API
+	 * This is needed because we're trying to do a one-size-fits all system.
+	 */
+	public static unsafe THEORAPLAY_VideoFrame getVideoFrame(IntPtr frame)
+	{
+		THEORAPLAY_VideoFrame theFrame;
+		unsafe
+		{
+			if (IntPtr.Size == 8)
+			{
+				THEORAPLAY_VideoFrame_INTERNAL64* framePtr =
+					(THEORAPLAY_VideoFrame_INTERNAL64*) frame;
+				theFrame.playms = framePtr->playms;
+				theFrame.fps = framePtr->fps;
+				theFrame.width = framePtr->width;
+				theFrame.height = framePtr->height;
+				theFrame.format = framePtr->format;
+				theFrame.pixels = framePtr->pixels;
+				theFrame.next = framePtr->next;
+			}
+			else
+			{
+				THEORAPLAY_VideoFrame_INTERNAL32* framePtr =
+					(THEORAPLAY_VideoFrame_INTERNAL32*) frame;
+				theFrame.playms = framePtr->playms;
+				theFrame.fps = framePtr->fps;
+				theFrame.width = framePtr->width;
+				theFrame.height = framePtr->height;
+				theFrame.format = framePtr->format;
+				theFrame.pixels = framePtr->pixels;
+				theFrame.next = framePtr->next;
+			}
+		}
+		return theFrame;
+	}
+
+	public static unsafe THEORAPLAY_AudioPacket getAudioPacket(IntPtr packet)
+	{
+		THEORAPLAY_AudioPacket thePacket;
+		unsafe
+		{
+			THEORAPLAY_AudioPacket* packetPtr =
+				(THEORAPLAY_AudioPacket*) packet;
+			thePacket = *packetPtr;
+		}
+		return thePacket;
+	}
+
+	public static float[] getSamples(IntPtr samples, int packetSize)
+	{
+		float[] theSamples = new float[packetSize];
+		Marshal.Copy(samples, theSamples, 0, packetSize);
+		return theSamples;
+	}
+
+	public static byte[] getPixels(IntPtr pixels, int imageSize)
+	{
+		byte[] thePixels = new byte[imageSize];
+		Marshal.Copy(pixels, thePixels, 0, imageSize);
+		return thePixels;
+	}
 }
