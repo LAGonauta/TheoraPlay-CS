@@ -2,7 +2,7 @@
 # Written by Ethan "flibitijibibo" Lee
 
 build:
-	dmcs -out:TheoraPlay.dll -target:library TheoraPlay.cs
+	dmcs -unsafe -out:TheoraPlay.dll -target:library TheoraPlay.cs
 
 clean:
 	rm -f TheoraPlay.dll
