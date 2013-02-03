@@ -41,7 +41,7 @@ public class TheoraPlay
 		THEORAPLAY_VIDFMT_RGBA
 	}
 
-#if X86
+#if x86
 	[StructLayout(LayoutKind.Explicit)]
 	public struct THEORAPLAY_VideoFrame
 	{
@@ -60,7 +60,7 @@ public class TheoraPlay
 		[FieldOffset(32)]
 			public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
-#else
+#elif x86_64
 	[StructLayout(LayoutKind.Sequential)]
 	public struct THEORAPLAY_VideoFrame
 	{
@@ -72,6 +72,8 @@ public class TheoraPlay
 		public IntPtr pixels;	// unsigned char*
 		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
+#else
+	#error Unknown architecture!
 #endif
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -144,45 +146,4 @@ public class TheoraPlay
 
 	[DllImport(theoraplay_libname)]
 	public static extern void THEORAPLAY_freeVideo(IntPtr item);
-
-	/* External API
-	 * This allows us to get TheoraPlay data from the IntPtr values.
-	 */
-	public static unsafe THEORAPLAY_VideoFrame getVideoFrame(IntPtr frame)
-	{
-		THEORAPLAY_VideoFrame theFrame;
-		unsafe
-		{
-			THEORAPLAY_VideoFrame* framePtr =
-				(THEORAPLAY_VideoFrame*) frame;
-			theFrame = *framePtr;
-		}
-		return theFrame;
-	}
-
-	public static unsafe THEORAPLAY_AudioPacket getAudioPacket(IntPtr packet)
-	{
-		THEORAPLAY_AudioPacket thePacket;
-		unsafe
-		{
-			THEORAPLAY_AudioPacket* packetPtr =
-				(THEORAPLAY_AudioPacket*) packet;
-			thePacket = *packetPtr;
-		}
-		return thePacket;
-	}
-
-	public static float[] getSamples(IntPtr samples, int packetSize)
-	{
-		float[] theSamples = new float[packetSize];
-		Marshal.Copy(samples, theSamples, 0, packetSize);
-		return theSamples;
-	}
-
-	public static byte[] getPixels(IntPtr pixels, int imageSize)
-	{
-		byte[] thePixels = new byte[imageSize];
-		Marshal.Copy(pixels, thePixels, 0, imageSize);
-		return thePixels;
-	}
 }
