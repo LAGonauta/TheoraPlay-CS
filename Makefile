@@ -19,7 +19,7 @@ else
 endif
 
 build:
-	dmcs -unsafe -out:TheoraPlay.dll -target:library TheoraPlay.cs -define:$(DEFINE)
+	dmcs -out:TheoraPlay.dll -target:library TheoraPlay.cs -define:$(DEFINE)
 
 clean:
 	rm -f TheoraPlay.dll
