@@ -41,19 +41,9 @@ public class TheoraPlay
 		THEORAPLAY_VIDFMT_RGBA
 	}
 
-	public struct THEORAPLAY_VideoFrame
-	{
-		public uint playms;
-		public double fps;
-		public uint width;
-		public uint height;
-		public THEORAPLAY_VideoFormat format;
-		public IntPtr pixels;	// unsigned char*
-		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
-	}
-
+#if X86
 	[StructLayout(LayoutKind.Explicit)]
-	private struct THEORAPLAY_VideoFrame_INTERNAL32
+	public struct THEORAPLAY_VideoFrame
 	{
 		[FieldOffset(0)]
 			public uint playms;
@@ -70,9 +60,9 @@ public class TheoraPlay
 		[FieldOffset(32)]
 			public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
-
+#else
 	[StructLayout(LayoutKind.Sequential)]
-	private struct THEORAPLAY_VideoFrame_INTERNAL64
+	public struct THEORAPLAY_VideoFrame
 	{
 		public uint playms;
 		public double fps;
@@ -82,6 +72,7 @@ public class TheoraPlay
 		public IntPtr pixels;	// unsigned char*
 		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
+#endif
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct THEORAPLAY_AudioPacket
@@ -155,37 +146,16 @@ public class TheoraPlay
 	public static extern void THEORAPLAY_freeVideo(IntPtr item);
 
 	/* External API
-	 * This is needed because we're trying to do a one-size-fits all system.
+	 * This allows us to get TheoraPlay data from the IntPtr values.
 	 */
 	public static unsafe THEORAPLAY_VideoFrame getVideoFrame(IntPtr frame)
 	{
 		THEORAPLAY_VideoFrame theFrame;
 		unsafe
 		{
-			if (IntPtr.Size == 8)
-			{
-				THEORAPLAY_VideoFrame_INTERNAL64* framePtr =
-					(THEORAPLAY_VideoFrame_INTERNAL64*) frame;
-				theFrame.playms = framePtr->playms;
-				theFrame.fps = framePtr->fps;
-				theFrame.width = framePtr->width;
-				theFrame.height = framePtr->height;
-				theFrame.format = framePtr->format;
-				theFrame.pixels = framePtr->pixels;
-				theFrame.next = framePtr->next;
-			}
-			else
-			{
-				THEORAPLAY_VideoFrame_INTERNAL32* framePtr =
-					(THEORAPLAY_VideoFrame_INTERNAL32*) frame;
-				theFrame.playms = framePtr->playms;
-				theFrame.fps = framePtr->fps;
-				theFrame.width = framePtr->width;
-				theFrame.height = framePtr->height;
-				theFrame.format = framePtr->format;
-				theFrame.pixels = framePtr->pixels;
-				theFrame.next = framePtr->next;
-			}
+			THEORAPLAY_VideoFrame* framePtr =
+				(THEORAPLAY_VideoFrame*) frame;
+			theFrame = *framePtr;
 		}
 		return theFrame;
 	}
