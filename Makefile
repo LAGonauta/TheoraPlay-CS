@@ -18,8 +18,10 @@ else
 	DEFINE = UNKN
 endif
 
-build:
-	dmcs -out:TheoraPlay.dll -target:library TheoraPlay.cs -define:$(DEFINE)
+build: clean
+	mkdir bin
+	cp TheoraPlay.dll.config bin
+	dmcs -debug -out:bin/TheoraPlay.dll -target:library TheoraPlay.cs -define:$(DEFINE)
 
 clean:
-	rm -f TheoraPlay.dll
+	rm -rf bin
