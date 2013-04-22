@@ -41,9 +41,8 @@ public class TheoraPlay
 		THEORAPLAY_VIDFMT_RGBA
 	}
 
-#if x86
 	[StructLayout(LayoutKind.Explicit)]
-	public struct THEORAPLAY_VideoFrame
+	private struct THEORAPLAY_VideoFrame32
 	{
 		[FieldOffset(0)]
 			public uint playms;
@@ -60,7 +59,7 @@ public class TheoraPlay
 		[FieldOffset(32)]
 			public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
-#elif x86_64
+
 	[StructLayout(LayoutKind.Sequential)]
 	public struct THEORAPLAY_VideoFrame
 	{
@@ -72,9 +71,6 @@ public class TheoraPlay
 		public IntPtr pixels;	// unsigned char*
 		public IntPtr next;	// struct THEORAPLAY_VideoFrame*
 	}
-#else
-	#error Unknown architecture!
-#endif
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct THEORAPLAY_AudioPacket
@@ -146,4 +142,59 @@ public class TheoraPlay
 
 	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern void THEORAPLAY_freeVideo(IntPtr item);
+
+	/* These are public methods that are NOT a part of TheoraPlay.
+	 * We have this to prevent architecture incompatibility.
+	 */
+
+	public static unsafe THEORAPLAY_VideoFrame getVideoFrame(IntPtr frame)
+	{
+		THEORAPLAY_VideoFrame theFrame;
+		unsafe
+		{
+			if (IntPtr.Size == 4)
+			{
+				THEORAPLAY_VideoFrame32* frame32Ptr = (THEORAPLAY_VideoFrame32*) frame;
+				THEORAPLAY_VideoFrame32 frame32 = *frame32Ptr;
+				theFrame.playms = frame32.playms;
+				theFrame.fps = frame32.fps;
+				theFrame.width = frame32.width;
+				theFrame.height = frame32.height;
+				theFrame.format = frame32.format;
+				theFrame.pixels = frame32.pixels;
+				theFrame.next = frame32.next;
+			}
+			else
+			{
+				THEORAPLAY_VideoFrame* framePtr = (THEORAPLAY_VideoFrame*) frame;
+				theFrame = *framePtr;
+			}
+		}
+		return theFrame;
+	}
+
+	public static unsafe THEORAPLAY_AudioPacket getAudioPacket(IntPtr packet)
+	{
+		THEORAPLAY_AudioPacket thePacket;
+		unsafe
+		{
+			THEORAPLAY_AudioPacket* packetPtr = (THEORAPLAY_AudioPacket*) packet;
+			thePacket = *packetPtr;
+		}
+		return thePacket;
+	}
+
+	public static float[] getSamples(IntPtr samples, int packetSize)
+	{
+		float[] theSamples = new float[packetSize];
+		Marshal.Copy(samples, theSamples, 0, packetSize);
+		return theSamples;
+	}
+
+	public static byte[] getPixels(IntPtr pixels, int imageSize)
+	{
+		byte[] thePixels = new byte[imageSize];
+		Marshal.Copy(pixels, thePixels, 0, imageSize);
+		return thePixels;
+	}
 }
