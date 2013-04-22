@@ -1,4 +1,4 @@
-# Makefile for TheoraPlay C# Wrapper
+# Makefile for TheoraPlay#
 # Written by Ethan "flibitijibibo" Lee
 
 # System information
@@ -20,8 +20,8 @@ endif
 
 build: clean
 	mkdir bin
-	cp TheoraPlay.dll.config bin
-	dmcs -debug -out:bin/TheoraPlay.dll -target:library TheoraPlay.cs -define:$(DEFINE)
+	cp TheoraPlay#.dll.config bin
+	dmcs -debug -out:bin/TheoraPlay#.dll -target:library TheoraPlay.cs -define:$(DEFINE)
 
 clean:
 	rm -rf bin

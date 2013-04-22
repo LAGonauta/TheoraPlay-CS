@@ -1,4 +1,4 @@
-/* TheoraPlay C# Wrapper
+/* TheoraPlay# - C# Wrapper for TheoraPlay
  *
  * Copyright (c) 2013 Ethan Lee.
  *
