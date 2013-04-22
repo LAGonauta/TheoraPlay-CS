@@ -134,7 +134,7 @@ static inline int Thread_Create(TheoraDecoder *ctx, void *(*routine) (void*))
         0,
         NULL
     );
-    return (ctx->worked == NULL);
+    return (ctx->worker == NULL);
 }
 static inline void Thread_Join(THEORAPLAY_THREAD_T thread)
 {
@@ -148,7 +148,7 @@ static inline int Mutex_Create(TheoraDecoder *ctx)
 }
 static inline void Mutex_Destroy(THEORAPLAY_MUTEX_T mutex)
 {
-    CloseHandle(thread);
+    CloseHandle(mutex);
 }
 static inline void Mutex_Lock(THEORAPLAY_MUTEX_T mutex)
 {
@@ -156,7 +156,7 @@ static inline void Mutex_Lock(THEORAPLAY_MUTEX_T mutex)
 }
 static inline void Mutex_Unlock(THEORAPLAY_MUTEX_T mutex)
 {
-    ReleaseMutex(mutex)
+    ReleaseMutex(mutex);
 }
 #else
 static inline int Thread_Create(TheoraDecoder *ctx, void *(*routine) (void*))
