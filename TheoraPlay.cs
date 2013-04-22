@@ -89,9 +89,9 @@ public class TheoraPlay
 
 
 	/* Note: The IntPtr return value is a THEORAPLAY_Decoder. */
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern IntPtr THEORAPLAY_startDecodeFile(
-		[InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)]
+		[In()] [MarshalAs(UnmanagedType.LPStr)]
 			string fname,	// const char*
 		uint maxframes,
 		THEORAPLAY_VideoFormat vidfmt
@@ -101,28 +101,28 @@ public class TheoraPlay
 	 * The IntPtr parameter is a THEORAPLAY_Decoder*.
 	 */
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern void THEORAPLAY_stopDecode(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern int THEORAPLAY_isDecoding(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern int THEORAPLAY_decodingError(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern int THEORAPLAY_isInitialized(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern int THEORAPLAY_hasVideoStream(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern int THEORAPLAY_hasAudioStream(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern uint THEORAPLAY_availableVideo(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern uint THEORAPLAY_availableAudio(IntPtr decoder);
 
 	/* Audio Data Functions
@@ -130,10 +130,10 @@ public class TheoraPlay
 	 * The exception is the decoder, which is still a THEORAPLAY_Decoder*.
 	 */
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern IntPtr THEORAPLAY_getAudio(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern void THEORAPLAY_freeAudio(IntPtr item);
 
 	/* Video Data Functions
@@ -141,9 +141,9 @@ public class TheoraPlay
 	 * The exception is the decoder, which is still a THEORAPLAY_Decoder*.
 	 */
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern IntPtr THEORAPLAY_getVideo(IntPtr decoder);
 
-	[DllImport(theoraplay_libname)]
+	[DllImport(theoraplay_libname, CallingConvention = CallingConvention.Cdecl)]
 	public static extern void THEORAPLAY_freeVideo(IntPtr item);
 }
