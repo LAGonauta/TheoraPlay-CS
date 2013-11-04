@@ -8,7 +8,7 @@
     <ProjectGuid>{47CF0C2E-3710-4188-BB11-30D248B2B5FB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>TheoraPlay</RootNamespace>
-    <AssemblyName>TheoraPlay#</AssemblyName>
+    <AssemblyName>TheoraPlay-CS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,7 +37,7 @@
     <Compile Include="TheoraPlay.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TheoraPlay#.dll.config">
+    <None Include="TheoraPlay-CS.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
