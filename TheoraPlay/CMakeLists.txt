@@ -3,9 +3,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(TheoraPlay)
 
-# Mono for OSX is only 32-bit
-IF (CMAKE_SYSTEM_NAME STREQUAL Darwin)
-	SET(CMAKE_OSX_ARCHITECTURES "i386")
+IF (APPLE)
+	SET(CMAKE_OSX_ARCHITECTURES i386 x86_64)
 ENDIF()
 
 # Compiler flags
@@ -17,7 +16,7 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # Include our own API...
-include_directories(include)
+INCLUDE_DIRECTORIES(include)
 
 # Target
 ADD_LIBRARY(theoraplay SHARED src/theoraplay.c)
