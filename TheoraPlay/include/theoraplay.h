@@ -13,6 +13,14 @@
 extern "C" {
 #endif
 
+#ifndef DECLSPEC
+#if defined(_WIN32)
+#define DECLSPEC __declspec(dllexport)
+#else
+#define DECLSPEC
+#endif
+#endif
+
 typedef struct THEORAPLAY_Io THEORAPLAY_Io;
 struct THEORAPLAY_Io
 {
@@ -53,27 +61,29 @@ typedef struct THEORAPLAY_AudioPacket
     struct THEORAPLAY_AudioPacket *next;
 } THEORAPLAY_AudioPacket;
 
-THEORAPLAY_Decoder *THEORAPLAY_startDecodeFile(const char *fname,
+DECLSPEC THEORAPLAY_Decoder *THEORAPLAY_startDecodeFile(const char *fname,
                                                const unsigned int maxframes,
                                                THEORAPLAY_VideoFormat vidfmt);
-THEORAPLAY_Decoder *THEORAPLAY_startDecode(THEORAPLAY_Io *io,
+DECLSPEC THEORAPLAY_Decoder *THEORAPLAY_startDecode(THEORAPLAY_Io *io,
                                            const unsigned int maxframes,
                                            THEORAPLAY_VideoFormat vidfmt);
-void THEORAPLAY_stopDecode(THEORAPLAY_Decoder *decoder);
+DECLSPEC void THEORAPLAY_stopDecode(THEORAPLAY_Decoder *decoder);
 
-int THEORAPLAY_isDecoding(THEORAPLAY_Decoder *decoder);
-int THEORAPLAY_decodingError(THEORAPLAY_Decoder *decoder);
-int THEORAPLAY_isInitialized(THEORAPLAY_Decoder *decoder);
-int THEORAPLAY_hasVideoStream(THEORAPLAY_Decoder *decoder);
-int THEORAPLAY_hasAudioStream(THEORAPLAY_Decoder *decoder);
-unsigned int THEORAPLAY_availableVideo(THEORAPLAY_Decoder *decoder);
-unsigned int THEORAPLAY_availableAudio(THEORAPLAY_Decoder *decoder);
+DECLSPEC int THEORAPLAY_isDecoding(THEORAPLAY_Decoder *decoder);
+DECLSPEC int THEORAPLAY_decodingError(THEORAPLAY_Decoder *decoder);
+DECLSPEC int THEORAPLAY_isInitialized(THEORAPLAY_Decoder *decoder);
+DECLSPEC int THEORAPLAY_hasVideoStream(THEORAPLAY_Decoder *decoder);
+DECLSPEC int THEORAPLAY_hasAudioStream(THEORAPLAY_Decoder *decoder);
+DECLSPEC unsigned int THEORAPLAY_availableVideo(THEORAPLAY_Decoder *decoder);
+DECLSPEC unsigned int THEORAPLAY_availableAudio(THEORAPLAY_Decoder *decoder);
 
-const THEORAPLAY_AudioPacket *THEORAPLAY_getAudio(THEORAPLAY_Decoder *decoder);
-void THEORAPLAY_freeAudio(const THEORAPLAY_AudioPacket *item);
+DECLSPEC const THEORAPLAY_AudioPacket *THEORAPLAY_getAudio(THEORAPLAY_Decoder *decoder);
+DECLSPEC void THEORAPLAY_freeAudio(const THEORAPLAY_AudioPacket *item);
 
-const THEORAPLAY_VideoFrame *THEORAPLAY_getVideo(THEORAPLAY_Decoder *decoder);
-void THEORAPLAY_freeVideo(const THEORAPLAY_VideoFrame *item);
+DECLSPEC const THEORAPLAY_VideoFrame *THEORAPLAY_getVideo(THEORAPLAY_Decoder *decoder);
+DECLSPEC void THEORAPLAY_freeVideo(const THEORAPLAY_VideoFrame *item);
+
+#undef DECLSPEC
 
 #ifdef __cplusplus
 }

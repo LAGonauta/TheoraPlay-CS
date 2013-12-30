@@ -127,7 +127,7 @@ typedef struct TheoraDecoder
 
 
 #ifdef _WIN32
-static inline int Thread_Create(TheoraDecoder *ctx, void *(*routine) (void*))
+static int Thread_Create(TheoraDecoder *ctx, void *(*routine) (void*))
 {
     ctx->worker = CreateThread(
         NULL,
@@ -139,25 +139,25 @@ static inline int Thread_Create(TheoraDecoder *ctx, void *(*routine) (void*))
     );
     return (ctx->worker == NULL);
 }
-static inline void Thread_Join(THEORAPLAY_THREAD_T thread)
+static void Thread_Join(THEORAPLAY_THREAD_T thread)
 {
     WaitForSingleObject(thread, INFINITE);
     CloseHandle(thread);
 }
-static inline int Mutex_Create(TheoraDecoder *ctx)
+static int Mutex_Create(TheoraDecoder *ctx)
 {
     ctx->lock = CreateMutex(NULL, FALSE, NULL);
     return (ctx->lock == NULL);
 }
-static inline void Mutex_Destroy(THEORAPLAY_MUTEX_T mutex)
+static void Mutex_Destroy(THEORAPLAY_MUTEX_T mutex)
 {
     CloseHandle(mutex);
 }
-static inline void Mutex_Lock(THEORAPLAY_MUTEX_T mutex)
+static void Mutex_Lock(THEORAPLAY_MUTEX_T mutex)
 {
     WaitForSingleObject(mutex, INFINITE);
 }
-static inline void Mutex_Unlock(THEORAPLAY_MUTEX_T mutex)
+static void Mutex_Unlock(THEORAPLAY_MUTEX_T mutex)
 {
     ReleaseMutex(mutex);
 }
@@ -238,6 +238,8 @@ static void WorkerThread(TheoraDecoder *ctx)
     vorbis_block vblock;
     th_dec_ctx *tdec = NULL;
     th_setup_info *tsetup = NULL;
+    int bos = 1;
+    int pp_level_max= 0;
 
     ogg_sync_init(&sync);
     vorbis_info_init(&vinfo);
@@ -245,7 +247,6 @@ static void WorkerThread(TheoraDecoder *ctx)
     th_comment_init(&tcomment);
     th_info_init(&tinfo);
 
-    int bos = 1;
     while (!ctx->halt && bos)
     {
         if (FeedMoreOggData(ctx->io, &sync) <= 0)
@@ -343,7 +344,7 @@ static void WorkerThread(TheoraDecoder *ctx)
 
         // Set decoder to maximum post-processing level.
         //  Theoretically we could try dropping this level if we're not keeping up.
-        int pp_level_max = 0;
+        pp_level_max = 0;
         // !!! FIXME: maybe an API to set this?
         //th_decode_ctl(tdec, TH_DECCTL_GET_PPLEVEL_MAX, &pp_level_max, sizeof(pp_level_max));
         th_decode_ctl(tdec, TH_DECCTL_SET_PPLEVEL, &pp_level_max, sizeof(pp_level_max));
@@ -590,11 +591,12 @@ THEORAPLAY_Decoder *THEORAPLAY_startDecodeFile(const char *fname,
                                                const unsigned int maxframes,
                                                THEORAPLAY_VideoFormat vidfmt)
 {
+    FILE *f;
     THEORAPLAY_Io *io = (THEORAPLAY_Io *) malloc(sizeof (THEORAPLAY_Io));
     if (io == NULL)
         return NULL;
 
-    FILE *f = fopen(fname, "rb");
+    f = fopen(fname, "rb");
     if (f == NULL)
     {
         free(io);
@@ -656,6 +658,8 @@ startdecode_failed:
 void THEORAPLAY_stopDecode(THEORAPLAY_Decoder *decoder)
 {
     TheoraDecoder *ctx = (TheoraDecoder *) decoder;
+    VideoFrame *videolist;
+    AudioPacket *audiolist;
     if (!ctx)
         return;
 
@@ -666,7 +670,7 @@ void THEORAPLAY_stopDecode(THEORAPLAY_Decoder *decoder)
         Mutex_Destroy(ctx->lock);
     } // if
 
-    VideoFrame *videolist = ctx->videolist;
+    videolist = ctx->videolist;
     while (videolist)
     {
         VideoFrame *next = videolist->next;
@@ -675,7 +679,7 @@ void THEORAPLAY_stopDecode(THEORAPLAY_Decoder *decoder)
         videolist = next;
     } // while
 
-    AudioPacket *audiolist = ctx->audiolist;
+    audiolist = ctx->audiolist;
     while (audiolist)
     {
         AudioPacket *next = audiolist->next;
