@@ -152,7 +152,9 @@ public class TheoraPlay
 		THEORAPLAY_VideoFrame theFrame;
 		unsafe
 		{
-			if (IntPtr.Size == 4)
+			/* This is only a problem for Mono. Ignore for Win32 */
+			if (	Environment.OSVersion.Platform != PlatformID.Win32NT &&
+				IntPtr.Size == 4	)
 			{
 				THEORAPLAY_VideoFrame32* frame32Ptr = (THEORAPLAY_VideoFrame32*) frame;
 				THEORAPLAY_VideoFrame32 frame32 = *frame32Ptr;
