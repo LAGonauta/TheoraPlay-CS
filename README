@@ -14,9 +14,9 @@ http://icculus.org/projects/theoraplay/
 
 About TheoraPlay#
 -----------------
-TheoraPlay# was written to be used in MonoGame's VideoPlayer. We wrap this
-around TheoraPlay compiled as a shared library. The build environment for the
-native library has been prepared in TheoraPlay/ as a CMake project.
+TheoraPlay# was written to be used for FNA's VideoPlayer. We wrap this around
+TheoraPlay compiled as a shared library. The build environment for the native
+library has been prepared in TheoraPlay/ as a CMake project.
 
 Building TheoraPlay
 -------------------
